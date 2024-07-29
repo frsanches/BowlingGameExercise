@@ -12,6 +12,12 @@
             if (currentFrame > 10)
                 return;
 
+            if(pins < 0 || pins > 10)
+                return;
+
+            if (frameScore[currentFrame -1] + pins > 10 && rolls == 2 && currentFrame != 10)
+                return;
+
             frameScore[currentFrame - 1] += pins;
 
             foreach (var (key, value) in frameStrike)
@@ -24,36 +30,27 @@
                     frameStrike.Remove(key);
             }
 
-            if (pins == 10)
+            if (rolls == 1 && frameScore[currentFrame - 1] == 10)
             {
-                if (rolls == 1)
+                if (currentFrame < 10)
                 {
-                    if (currentFrame < 10)
-                    {
-                        frameStrike.Add(currentFrame - 1, 2);
-                        currentFrame++;
-                    }
+                    frameStrike.Add(currentFrame - 1, 2);
+                    currentFrame++;
                 }
-                else
-                {
-                    if (rolls == 3)
-                    {
-                        currentFrame++;
-                        rolls = 1;
-                    }
-                    else
-                        rolls++;
-                }
-
-                return;
             }
-
-            rolls++;
-
-            if (rolls > 2)
+            else if (rolls == 2 && frameScore[currentFrame - 1] == 10)
             {
-                rolls = 1;
-                currentFrame++;
+                rolls++;
+            }
+            else 
+            {
+                rolls++;
+
+                if (rolls > 2)
+                {
+                    rolls = 1;
+                    currentFrame++;
+                }
             }
         }
 
